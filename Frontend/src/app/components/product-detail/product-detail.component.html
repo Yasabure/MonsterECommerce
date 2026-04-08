@@ -1,0 +1,152 @@
+<!-- LOADING -->
+<div class="text-center py-5" *ngIf="!product">
+  <div class="spinner-border text-monster" role="status"></div>
+</div>
+
+<div class="pd-page" *ngIf="product">
+
+  <!-- LAYOUT PRINCIPAL -->
+  <div class="pd-layout">
+
+    <!-- ===== COLUNA IMAGEM ===== -->
+    <div class="pd-img-col">
+      <div class="pd-img-wrap">
+        <!-- Badge categoria -->
+        <span class="pd-badge" *ngIf="product.category">{{ product.category }}</span>
+        <!-- Badge promoção -->
+        <span class="pd-promo-badge" *ngIf="isPromo">-{{ product.discountPercentage }}%</span>
+
+        <img *ngIf="product.imageUrl" [src]="product.imageUrl" [alt]="product.name" class="pd-img">
+        <div *ngIf="!product.imageUrl" class="pd-no-img">
+          <i class="bi bi-image"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COLUNA INFO ===== -->
+    <div class="pd-info-col">
+
+      <!-- Categoria + Nome -->
+      <span class="pd-category-label" *ngIf="product.category">{{ product.category | uppercase }}</span>
+      <h1 class="pd-title">{{ product.name | uppercase }}</h1>
+      <p class="pd-desc">{{ product.description }}</p>
+
+      <!-- SPECS: produto normal -->
+      <div class="pd-specs" *ngIf="!isPromo">
+        <div class="pd-spec-box">
+          <i class="bi bi-lightning-charge-fill pd-spec-icon"></i>
+          <span class="pd-spec-val">{{ product.caffeineMg != null ? product.caffeineMg + 'mg' : '—' }}</span>
+          <span class="pd-spec-label">CAFEÍNA</span>
+        </div>
+        <div class="pd-spec-box">
+          <i class="bi bi-fire pd-spec-icon"></i>
+          <span class="pd-spec-val">{{ product.caloriesKcal != null ? product.caloriesKcal + ' KCAL' : '—' }}</span>
+          <span class="pd-spec-label">CALORIAS</span>
+        </div>
+        <div class="pd-spec-box">
+          <i class="bi bi-droplet pd-spec-icon"></i>
+          <span class="pd-spec-val">{{ product.sugarG != null ? product.sugarG + 'G' : '—' }}</span>
+          <span class="pd-spec-label">AÇÚCAR</span>
+        </div>
+        <div class="pd-spec-box">
+          <i class="bi bi-cup-straw pd-spec-icon"></i>
+          <span class="pd-spec-val">{{ product.volumeMl != null ? product.volumeMl + 'ML' : '—' }}</span>
+          <span class="pd-spec-label">VOLUME</span>
+        </div>
+      </div>
+
+      <!-- SPECS: pack / promoção -->
+      <div class="pd-specs" *ngIf="isPromo">
+        <div class="pd-spec-box">
+          <i class="bi bi-stack pd-spec-icon"></i>
+          <span class="pd-spec-val">{{ product.packSize != null ? product.packSize + ' LATAS' : '—' }}</span>
+          <span class="pd-spec-label">QUANTIDADE</span>
+        </div>
+        <div class="pd-spec-box">
+          <i class="bi bi-tag-fill pd-spec-icon"></i>
+          <span class="pd-spec-val">{{ product.discountPercentage }}%</span>
+          <span class="pd-spec-label">DESCONTO</span>
+        </div>
+        <div class="pd-spec-box">
+          <i class="bi bi-cash-coin pd-spec-icon"></i>
+          <span class="pd-spec-val">R$ {{ pricePerUnit | number:'1.2-2' }}</span>
+          <span class="pd-spec-label">POR LATA</span>
+        </div>
+      </div>
+
+      <!-- CONTEÚDO DO PACK (só em promoção com packSize) -->
+      <div class="pd-pack-contents" *ngIf="isPromo && product.packSize">
+        <h6 class="pd-section-title">CONTEÚDO DO PACK</h6>
+        <p class="pd-pack-item">
+          <i class="bi bi-check-circle-fill me-2" style="color:#84bd00;"></i>
+          {{ product.packSize }}x {{ product.name }} {{ product.volumeMl ? product.volumeMl + 'ml' : '' }}
+        </p>
+      </div>
+
+      <hr class="pd-divider">
+
+      <!-- PREÇO -->
+      <div class="pd-price-block">
+        <!-- Produto normal -->
+        <ng-container *ngIf="!isPromo">
+          <span class="pd-price">R$ {{ (product.discountPercentage > 0 ? discountedPrice : product.price) | number:'1.2-2' }}</span>
+          <span class="pd-price-original ms-2" *ngIf="product.discountPercentage > 0">R$ {{ product.price | number:'1.2-2' }}</span>
+          <span class="pd-price-unit" *ngIf="!product.discountPercentage"> / unidade</span>
+        </ng-container>
+        <!-- Pack com desconto -->
+        <ng-container *ngIf="isPromo">
+          <span class="pd-price">R$ {{ discountedPrice | number:'1.2-2' }}</span>
+          <span class="pd-price-original ms-2">R$ {{ product.price | number:'1.2-2' }}</span>
+        </ng-container>
+      </div>
+
+      <!-- AÇÕES -->
+      <ng-container *ngIf="authService.isLoggedIn && product.stockQuantity > 0">
+        <div class="pd-action-row">
+          <div class="pd-qty">
+            <button class="pd-qty-btn" (click)="setQty(-1)" [disabled]="quantity <= 1">−</button>
+            <span class="pd-qty-num">{{ quantity }}</span>
+            <button class="pd-qty-btn" (click)="setQty(1)" [disabled]="quantity >= product.stockQuantity">+</button>
+          </div>
+          <button class="pd-add-btn" (click)="addToCart()" [disabled]="!!feedback && feedback.includes('carrinho')">
+            <i class="bi bi-cart-plus me-2"></i>
+            {{ isPromo ? 'ADICIONAR PACK' : 'ADICIONAR' }}
+            <span class="ms-2">→ R$ {{ currentTotal | number:'1.2-2' }}</span>
+          </button>
+        </div>
+
+        <div *ngIf="feedback" class="pd-feedback"
+             [class.ok]="feedback.includes('carrinho')"
+             [class.err]="feedback.includes('Erro')">
+          {{ feedback }}
+        </div>
+      </ng-container>
+
+      <div *ngIf="product.stockQuantity === 0" class="pd-action-row">
+        <button class="pd-add-btn pd-add-btn--disabled" disabled>
+          ESGOTADO
+        </button>
+      </div>
+
+      <a *ngIf="!authService.isLoggedIn && product.stockQuantity > 0"
+         routerLink="/login" class="pd-login-btn">
+        <i class="bi bi-lock me-2"></i>LOGIN PARA COMPRAR
+      </a>
+
+      <!-- INGREDIENTES (produto normal) -->
+      <div class="pd-ingredients" *ngIf="!isPromo && product.ingredients">
+        <hr class="pd-divider">
+        <h6 class="pd-section-title">INGREDIENTES</h6>
+        <p class="pd-ingredients-text">{{ product.ingredients }}</p>
+      </div>
+
+      <!-- Voltar -->
+      <div class="mt-4">
+        <a routerLink="/" class="pd-back-link">
+          <i class="bi bi-arrow-left me-1"></i>Voltar à vitrine
+        </a>
+      </div>
+
+    </div>
+  </div>
+</div>

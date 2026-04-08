@@ -1,0 +1,66 @@
+<div class="container py-4">
+<div class="d-flex align-items-center mb-4">
+  <i class="bi bi-box-seam fs-3 text-monster me-3"></i>
+  <div>
+    <h4 class="mb-0 fw-bold text-dark">Meus Pedidos</h4>
+    <p class="text-muted small mb-0">Histórico de todas as suas compras</p>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="text-center py-5" *ngIf="orders.length === 0 && loading">
+  <div class="spinner-border text-monster"></div>
+</div>
+
+<!-- SEM PEDIDOS -->
+<div class="card border-0 shadow-sm rounded-4 text-center py-5" *ngIf="!loading && orders.length === 0">
+  <i class="bi bi-bag-x text-secondary" style="font-size:3rem;"></i>
+  <p class="h5 text-muted mt-3">Você ainda não realizou nenhum pedido.</p>
+  <a routerLink="/" class="btn btn-monster mt-2 mx-auto" style="width:fit-content;">Ver Produtos</a>
+</div>
+
+<!-- LISTA DE PEDIDOS -->
+<div class="row g-3" *ngIf="orders.length > 0">
+  <div class="col-12" *ngFor="let order of orders">
+    <div class="card border-0 shadow-sm rounded-4 order-card">
+      <div class="card-body p-4">
+        <div class="row align-items-center">
+
+          <div class="col-md-2">
+            <p class="text-muted small mb-0">Pedido</p>
+            <p class="fw-bold mb-0 fs-5">#{{ order.id }}</p>
+          </div>
+
+          <div class="col-md-3">
+            <p class="text-muted small mb-0">Data</p>
+            <p class="fw-semibold mb-0">{{ order.orderDate | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+
+          <div class="col-md-2">
+            <p class="text-muted small mb-0">Total</p>
+            <p class="fw-bold text-success mb-0">R$ {{ order.totalAmount | number:'1.2-2' }}</p>
+          </div>
+
+          <div class="col-md-2">
+            <p class="text-muted small mb-0">Status</p>
+            <span class="badge rounded-pill"
+                  [class.bg-success]="order.status === 'Success'"
+                  [class.bg-warning]="order.status === 'Pending'"
+                  [class.bg-danger]="order.status === 'Failed'"
+                  [class.text-dark]="order.status === 'Pending'">
+              {{ order.status === 'Success' ? 'Aprovado' : order.status === 'Pending' ? 'Pendente' : order.status }}
+            </span>
+          </div>
+
+          <div class="col-md-3 text-md-end mt-3 mt-md-0">
+            <a [routerLink]="['/orders', order.id]" class="btn btn-monster btn-sm px-4">
+              <i class="bi bi-eye me-1"></i> Ver detalhes
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

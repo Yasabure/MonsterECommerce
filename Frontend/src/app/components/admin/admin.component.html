@@ -1,0 +1,287 @@
+<div class="container py-4">
+
+<!-- CABEÇALHO + TABS -->
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="fw-bold text-monster mb-0">
+    <i class="bi bi-gear me-2"></i>Admin
+  </h2>
+  <button class="btn btn-monster fw-bold" (click)="openCreate()">
+    <i class="bi bi-plus-lg me-1"></i>
+    {{ activeTab === 'promotions' ? 'Novo Pack' : 'Novo Produto' }}
+  </button>
+</div>
+
+<!-- TABS -->
+<div class="d-flex gap-2 mb-4">
+  <button class="admin-tab-btn" [class.active]="activeTab === 'products'" (click)="setTab('products')">
+    <i class="bi bi-grid me-1"></i> Produtos
+  </button>
+  <button class="admin-tab-btn" [class.active]="activeTab === 'promotions'" (click)="setTab('promotions')">
+    <i class="bi bi-box-seam me-1"></i> Packs
+  </button>
+</div>
+
+<!-- Feedback -->
+<div *ngIf="feedback" class="alert py-2 mb-3"
+     [class.alert-success]="feedbackType === 'success'"
+     [class.alert-danger]="feedbackType === 'danger'">
+  {{ feedback }}
+</div>
+
+<!-- FORMULÁRIO CRIAR/EDITAR -->
+<div *ngIf="showForm" class="card border-0 shadow rounded-4 mb-4">
+  <div class="card-header rounded-top-4 py-3"
+       [style.background]="form.isPromotion ? '#1a0a00' : '#0a0a1a'"
+       style="border-bottom:1px solid #222;">
+    <h5 class="mb-0 fw-bold text-white">
+      <i class="bi me-2"
+         [class.bi-tag-fill]="form.isPromotion"
+         [class.bi-plus-circle]="!form.isPromotion && !editingId"
+         [class.bi-pencil]="!form.isPromotion && editingId"></i>
+      {{ editingId
+          ? (form.isPromotion ? 'Editar Pack' : 'Editar Produto')
+          : (form.isPromotion ? 'Novo Pack' : 'Novo Produto') }}
+    </h5>
+  </div>
+  <div class="card-body p-4">
+    <div class="row g-3">
+
+      <!-- Coluna esquerda: imagem -->
+      <div class="col-md-4">
+        <label class="form-label fw-semibold">Imagem</label>
+        <div class="img-upload-box mb-2 d-flex align-items-center justify-content-center rounded-3"
+             [class.has-img]="imagePreview">
+          <img *ngIf="imagePreview" [src]="imagePreview" class="img-preview" alt="Preview">
+          <div *ngIf="!imagePreview" class="text-center text-muted">
+            <i class="bi bi-image" style="font-size:3rem;opacity:.3;"></i>
+            <p class="small mt-1 mb-0">Sem imagem</p>
+          </div>
+        </div>
+        <label class="btn btn-outline-secondary w-100 btn-sm mb-2" style="cursor:pointer;">
+          <i class="bi bi-upload me-1"></i> Fazer upload
+          <input type="file" accept="image/*" hidden (change)="onFileSelected($event)">
+        </label>
+        <p class="text-muted small text-center mb-2">— ou use uma URL —</p>
+        <input type="url" class="form-control form-control-sm" [(ngModel)]="form.imageUrl"
+               name="imageUrl" placeholder="https://exemplo.com/imagem.jpg"
+               (input)="imagePreview = form.imageUrl || null">
+      </div>
+
+      <!-- Coluna direita: dados -->
+      <div class="col-md-8">
+        <div class="row g-3">
+
+          <!-- ── BLOCO PRODUTO BASE (apenas promoções novas) ── -->
+          <ng-container *ngIf="form.isPromotion && !editingId">
+            <div class="col-12">
+              <div class="p-3 rounded-3" style="background:#0d0d00; border:1px solid #333;">
+                <p class="text-warning fw-bold small mb-2"><i class="bi bi-boxes me-1"></i>PRODUTO BASE</p>
+                <select class="form-select form-select-sm mb-2" [(ngModel)]="selectedBaseId"
+                        name="baseProductId" (ngModelChange)="onBaseProductChange()">
+                  <option [ngValue]="null">— Selecione um produto —</option>
+                  <option *ngFor="let p of regularProducts" [ngValue]="p.id">
+                    {{ p.name }}
+                  </option>
+                </select>
+                <div class="row g-2" *ngIf="selectedBaseId">
+                  <div class="col-6">
+                    <label class="form-label small">Latas no pack <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control form-control-sm" [(ngModel)]="form.packSize"
+                           name="packSize" min="1" placeholder="Ex: 6"
+                           (ngModelChange)="onPackOrDiscountChange()">
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label small">Desconto (%) <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control form-control-sm" [(ngModel)]="form.discountPercentage"
+                           name="discountPercentage" min="0" max="100" placeholder="Ex: 15"
+                           (ngModelChange)="onPackOrDiscountChange()">
+                  </div>
+                  <div class="col-12">
+                    <p class="small mb-0" style="color:#666;">
+                      Preço calculado:
+                      <strong style="color:#84bd00;">R$ {{ form.price | number:'1.2-2' }}</strong>
+                      <span *ngIf="form.packSize && form.packSize > 1" style="color:#555;">
+                        &nbsp;({{ form.packSize }} latas)
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Pack size ao editar promoção existente -->
+          <ng-container *ngIf="form.isPromotion && editingId">
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold small">Latas no pack</label>
+              <input type="number" class="form-control" [(ngModel)]="form.packSize"
+                     name="packSizeEdit" min="1" placeholder="Ex: 6"
+                     (ngModelChange)="onPackOrDiscountChange()">
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold small">Desconto (%) <span class="text-danger">*</span></label>
+              <input type="number" class="form-control" [(ngModel)]="form.discountPercentage"
+                     name="discountPercentageEdit" min="0" max="100"
+                     (ngModelChange)="onPackOrDiscountChange()">
+            </div>
+            <div class="col-12">
+              <p class="small mb-0" style="color:#666;">
+                Preço calculado:
+                <strong style="color:#84bd00;">R$ {{ form.price | number:'1.2-2' }}</strong>
+                <span *ngIf="form.packSize && form.packSize > 1" style="color:#555;">
+                  &nbsp;({{ form.packSize }} latas)
+                </span>
+              </p>
+            </div>
+          </ng-container>
+          <!-- ── FIM BLOCO PRODUTO BASE ── -->
+
+          <div class="col-12">
+            <label class="form-label fw-semibold">Nome <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" [(ngModel)]="form.name" name="name" required
+                   [placeholder]="form.isPromotion ? 'Ex: Monster Original — Pack 6' : 'Ex: Monster Energy Ultra White'">
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">Descrição</label>
+            <textarea class="form-control" [(ngModel)]="form.description" name="description" rows="2"
+                      placeholder="Descrição..."></textarea>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label fw-semibold">Preço (R$) <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" [(ngModel)]="form.price" name="price" min="0" step="0.01" required>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label fw-semibold">Estoque <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" [(ngModel)]="form.stockQuantity" name="stockQuantity" min="0" required>
+          </div>
+          <div class="col-12" *ngIf="!form.isPromotion">
+            <label class="form-label fw-semibold">Categoria</label>
+            <input type="text" class="form-control" [(ngModel)]="form.category" name="category" placeholder="Monster Energy">
+          </div>
+
+          <!-- Desconto opcional em produtos regulares -->
+          <div class="col-12" *ngIf="!form.isPromotion">
+            <div class="p-3 rounded-3" style="background:#0a0a0a; border:1px solid #1e1e1e;">
+              <p class="text-monster fw-bold small mb-2"><i class="bi bi-tag-fill me-1"></i>DESCONTO (OPCIONAL)</p>
+              <input type="number" class="form-control form-control-sm" [(ngModel)]="form.discountPercentage"
+                     name="discountPercentage" min="0" max="100" placeholder="0 = sem desconto">
+              <div class="form-text">0 = produto normal sem desconto.</div>
+            </div>
+          </div>
+
+          <!-- Informações nutricionais (apenas produtos regulares) -->
+          <div class="col-12" *ngIf="!form.isPromotion">
+            <div class="p-3 rounded-3" style="background:#0a0a0a; border:1px solid #1e1e1e;">
+              <p class="text-monster fw-bold small mb-2"><i class="bi bi-lightning-fill me-1"></i>INFORMAÇÕES NUTRICIONAIS</p>
+              <div class="row g-2">
+                <div class="col-6 col-sm-3">
+                  <label class="form-label small">Cafeína (mg)</label>
+                  <input type="number" class="form-control form-control-sm" [(ngModel)]="form.caffeineMg" name="caffeineMg" min="0">
+                </div>
+                <div class="col-6 col-sm-3">
+                  <label class="form-label small">Calorias (kcal)</label>
+                  <input type="number" class="form-control form-control-sm" [(ngModel)]="form.caloriesKcal" name="caloriesKcal" min="0">
+                </div>
+                <div class="col-6 col-sm-3">
+                  <label class="form-label small">Açúcar (g)</label>
+                  <input type="number" class="form-control form-control-sm" [(ngModel)]="form.sugarG" name="sugarG" min="0">
+                </div>
+                <div class="col-6 col-sm-3">
+                  <label class="form-label small">Volume (ml)</label>
+                  <input type="number" class="form-control form-control-sm" [(ngModel)]="form.volumeMl" name="volumeMl" min="0">
+                </div>
+                <div class="col-12">
+                  <label class="form-label small">Ingredientes</label>
+                  <textarea class="form-control form-control-sm" [(ngModel)]="form.ingredients" name="ingredients" rows="2"
+                            placeholder="Água carbonatada, taurina, cafeína..."></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Ações -->
+    <div class="d-flex gap-2 justify-content-end mt-4 pt-3 border-top">
+      <button class="btn btn-outline-secondary" type="button" (click)="cancelForm()" [disabled]="saving || uploadingImage">
+        Cancelar
+      </button>
+      <button class="btn btn-monster fw-bold px-4" type="button" (click)="save()"
+              [disabled]="saving || uploadingImage || !form.name || (form.isPromotion && !form.discountPercentage)">
+        <span *ngIf="saving || uploadingImage" class="spinner-border spinner-border-sm me-2"></span>
+        {{ uploadingImage ? 'Enviando imagem...' : saving ? 'Salvando...' : 'Salvar' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TABELA -->
+<div class="card border-0 shadow rounded-4">
+  <div class="card-body p-0">
+
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner-border text-monster"></div>
+    </div>
+
+    <div *ngIf="!loading && products.length === 0" class="text-center py-5 text-muted">
+      <i class="bi" [class.bi-grid]="activeTab==='products'" [class.bi-box-seam]="activeTab==='promotions'"
+         style="font-size:3rem;opacity:.3;"></i>
+      <p class="mt-2">Nenhum {{ activeTab === 'promotions' ? 'pack cadastrado' : 'produto cadastrado' }}.</p>
+    </div>
+
+    <div class="table-responsive" *ngIf="!loading && products.length > 0">
+      <table class="table align-middle mb-0">
+        <thead>
+          <tr>
+            <th class="ps-4" style="width:64px;">Img</th>
+            <th>Nome</th>
+            <th>Categoria</th>
+            <th class="text-end">Preço</th>
+            <th class="text-center">Desconto</th>
+            <th class="text-center">Estoque</th>
+            <th class="text-center pe-4">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of products">
+            <td class="ps-4">
+              <div class="admin-thumb rounded d-flex align-items-center justify-content-center bg-dark overflow-hidden">
+                <img *ngIf="p.imageUrl" [src]="p.imageUrl" [alt]="p.name" class="img-fluid">
+                <i *ngIf="!p.imageUrl" class="bi bi-image text-secondary"></i>
+              </div>
+            </td>
+            <td>
+              <span class="fw-semibold">{{ p.name }}</span>
+              <p class="small text-muted mb-0 text-truncate" style="max-width:260px;">{{ p.description }}</p>
+            </td>
+            <td><span class="badge bg-monster rounded-pill">{{ p.category }}</span></td>
+            <td class="text-end fw-bold text-success">R$ {{ p.price | number:'1.2-2' }}</td>
+            <td class="text-center">
+              <span *ngIf="p.discountPercentage > 0" class="badge bg-danger">-{{ p.discountPercentage }}%</span>
+              <span *ngIf="!p.discountPercentage" class="text-muted small">—</span>
+            </td>
+            <td class="text-center">
+              <span class="badge" [class.bg-success]="p.stockQuantity > 0" [class.bg-danger]="p.stockQuantity === 0">
+                {{ p.stockQuantity }}
+              </span>
+            </td>
+            <td class="text-center pe-4">
+              <div class="d-flex gap-1 justify-content-center">
+                <button class="btn btn-sm btn-outline-secondary" title="Editar" (click)="openEdit(p)">
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" title="Excluir" (click)="deleteProduct(p.id, p.name)">
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+</div>

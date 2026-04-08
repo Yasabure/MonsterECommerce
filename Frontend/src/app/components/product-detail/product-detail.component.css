@@ -1,0 +1,275 @@
+/* ===== PAGE WRAPPER ===== */
+.pd-page {
+  background: #000;
+  min-height: 80vh;
+}
+
+/* ===== LAYOUT ===== */
+.pd-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 80vh;
+}
+
+/* ===== COLUNA IMAGEM ===== */
+.pd-img-col {
+  position: relative;
+  background: #050505;
+}
+.pd-img-wrap {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 50%, rgba(132,189,0,0.12) 0%, transparent 70%);
+  overflow: hidden;
+}
+.pd-img {
+  max-height: 420px;
+  max-width: 85%;
+  width: auto;
+  object-fit: contain;
+  padding: 12px;
+  filter: drop-shadow(0 0 30px rgba(132,189,0,0.2));
+  transition: transform 0.4s ease;
+}
+.pd-img:hover { transform: scale(1.03); }
+
+.pd-no-img {
+  color: #2a2a2a;
+  font-size: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pd-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: #84bd00;
+  color: #000;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  z-index: 2;
+}
+.pd-promo-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #e03c31;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+/* ===== COLUNA INFO ===== */
+.pd-info-col {
+  padding: 3.5rem 3rem 3rem;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.pd-category-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #84bd00;
+  margin-bottom: 0.5rem;
+}
+
+.pd-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.5rem);
+  line-height: 1;
+  color: #fff;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 30px rgba(132,189,0,0.15);
+}
+
+.pd-desc {
+  color: #888;
+  font-size: 0.9rem;
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+}
+
+/* ===== SPECS ===== */
+.pd-specs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.pd-spec-box {
+  background: #0d0d0d;
+  border: 1px solid #1a1a1a;
+  border-radius: 8px;
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.25rem;
+}
+.pd-spec-icon { color: #84bd00; font-size: 1rem; }
+.pd-spec-val  { font-size: 0.78rem; font-weight: 700; color: #fff; }
+.pd-spec-label{ font-size: 0.58rem; font-weight: 700; letter-spacing: 0.1em; color: #555; text-transform: uppercase; }
+
+/* ===== PACK CONTENTS ===== */
+.pd-pack-contents {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.pd-pack-item { color: #aaa; font-size: 0.88rem; margin: 0; }
+
+/* ===== DIVISOR ===== */
+.pd-divider { border-color: #1a1a1a; margin: 1.25rem 0; }
+.pd-section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: #84bd00;
+  margin-bottom: 0.5rem;
+}
+
+/* ===== PREÇO ===== */
+.pd-price-block { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 1.25rem; }
+.pd-price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+}
+.pd-price-unit { color: #666; font-size: 0.85rem; }
+.pd-price-original {
+  color: #555;
+  font-size: 1rem;
+  text-decoration: line-through;
+}
+
+/* ===== AÇÕES ===== */
+.pd-action-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.pd-qty {
+  display: flex;
+  align-items: center;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.pd-qty-btn {
+  width: 38px;
+  height: 48px;
+  background: #111;
+  border: none;
+  color: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.pd-qty-btn:hover:not(:disabled) { background: #1a1a1a; color: #84bd00; }
+.pd-qty-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.pd-qty-num {
+  min-width: 40px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  border-left: 1px solid #2a2a2a;
+  border-right: 1px solid #2a2a2a;
+  padding: 0.5rem 0;
+  line-height: 1.8;
+}
+
+.pd-add-btn {
+  flex: 1;
+  padding: 0.85rem 1rem;
+  background: #84bd00;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+.pd-add-btn:hover:not(:disabled) { background: #a0e000; }
+.pd-add-btn--disabled { opacity: 0.4; cursor: not-allowed; }
+
+.pd-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #aaa;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s, color 0.2s;
+}
+.pd-login-btn:hover { border-color: #84bd00; color: #84bd00; }
+
+/* ===== FEEDBACK ===== */
+.pd-feedback {
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+.pd-feedback.ok  { background: #0d2a0d; color: #84bd00; }
+.pd-feedback.err { background: #2a0d0d; color: #ff6b6b; }
+
+/* ===== INGREDIENTES ===== */
+.pd-ingredients-text { color: #666; font-size: 0.8rem; line-height: 1.6; margin: 0; }
+
+/* ===== BACK LINK ===== */
+.pd-back-link {
+  color: #555;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s;
+}
+.pd-back-link:hover { color: #84bd00; }
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 991.98px) {
+  .pd-layout { grid-template-columns: 1fr; }
+  .pd-img-wrap { position: relative; height: 320px; min-height: 260px; }
+  .pd-info-col { padding: 2rem 1.5rem; }
+  .pd-specs { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 575.98px) {
+  .pd-info-col { padding: 1.5rem 1rem; }
+  .pd-action-row { flex-direction: column; }
+  .pd-add-btn { width: 100%; }
+  .pd-qty { width: 100%; justify-content: center; }
+}

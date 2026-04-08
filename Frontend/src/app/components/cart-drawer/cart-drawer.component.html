@@ -1,0 +1,47 @@
+<ng-container *ngIf="drawerService.isOpen$ | async as isOpen">
+  <div class="drawer-backdrop" [class.show]="isOpen" (click)="drawerService.close()"></div>
+
+  <div class="cart-drawer" [class.open]="isOpen">
+    <div class="drawer-header">
+      <span class="drawer-title">CARRINHO ({{ drawerService.itemCount }})</span>
+      <button class="btn-close-drawer" (click)="drawerService.close()">✕</button>
+    </div>
+
+    <ng-container *ngIf="drawerService.cart$ | async as cart">
+
+      <div class="drawer-body" *ngIf="cart?.items?.length > 0; else emptyState">
+        <div class="drawer-item" *ngFor="let item of cart.items">
+          <div class="drawer-item-img">
+            <img *ngIf="item.productImageUrl" [src]="item.productImageUrl" [alt]="item.productName">
+            <i *ngIf="!item.productImageUrl" class="bi bi-image"></i>
+          </div>
+          <div class="drawer-item-info">
+            <div class="drawer-item-name">{{ item.productName }}</div>
+            <div class="drawer-item-price">R$ {{ item.productPrice | number:'1.2-2' }}</div>
+          </div>
+          <div class="drawer-item-qty">
+            <button (click)="updateQty(item.productId, item.quantity - 1)">−</button>
+            <span>{{ item.quantity }}</span>
+            <button (click)="updateQty(item.productId, item.quantity + 1)"
+                    [disabled]="item.quantity >= item.stockQuantity">+</button>
+          </div>
+        </div>
+      </div>
+
+      <ng-template #emptyState>
+        <div class="drawer-empty">Seu carrinho está vazio.</div>
+      </ng-template>
+
+      <div class="drawer-footer" *ngIf="cart?.items?.length > 0">
+        <div class="drawer-total">
+          <span>Total</span>
+          <span class="drawer-total-amount">R$ {{ cart.totalAmount | number:'1.2-2' }}</span>
+        </div>
+        <a class="btn-checkout-drawer" routerLink="/checkout" (click)="drawerService.close()">
+          <i class="bi bi-bag-check me-2"></i>FINALIZAR COMPRA
+        </a>
+      </div>
+
+    </ng-container>
+  </div>
+</ng-container>

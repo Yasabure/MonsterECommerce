@@ -1,0 +1,6 @@
+@MonsterECommerce.API_HostAddress = http://localhost:5076
+
+GET {{MonsterECommerce.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

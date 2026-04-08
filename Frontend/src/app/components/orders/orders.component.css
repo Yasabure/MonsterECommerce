@@ -1,0 +1,5 @@
+.text-monster { color: #84bd00 !important; }
+.btn-monster { background-color: #84bd00; color: #000; font-weight: 700; border: none; }
+.btn-monster:hover { background-color: #a0e000; color: #000; }
+.order-card { transition: box-shadow 0.2s; }
+.order-card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important; }

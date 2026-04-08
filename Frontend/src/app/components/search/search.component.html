@@ -1,0 +1,117 @@
+<div class="container py-4">
+<!-- TÍTULO -->
+<div class="d-flex align-items-center mb-4">
+  <i class="bi bi-search fs-3 text-monster me-3"></i>
+  <div>
+    <h4 class="mb-0 fw-bold">Busca de Produtos</h4>
+    <p class="text-muted small mb-0">Encontre o energético certo para você</p>
+  </div>
+</div>
+
+<!-- FORMULÁRIO DE BUSCA -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+  <div class="card-body p-3">
+    <form (ngSubmit)="searchProducts()" class="row g-2">
+      <div class="col">
+        <div class="input-group">
+          <span class="input-group-text bg-dark border-dark text-monster">
+            <i class="bi bi-search"></i>
+          </span>
+          <input
+            type="text"
+            class="form-control border-dark"
+            placeholder="Digite o nome do produto..."
+            [(ngModel)]="query"
+            name="query"
+            autofocus
+          />
+        </div>
+      </div>
+      <div class="col-auto">
+        <button class="btn btn-monster px-4" type="submit">
+          <i class="bi bi-search me-1"></i> Buscar
+        </button>
+      </div>
+      <div class="col-auto" *ngIf="products.length > 0 || query">
+        <button class="btn btn-outline-secondary" type="button" (click)="query = ''; products = []">
+          <i class="bi bi-x-lg"></i> Limpar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- RESULTADOS -->
+<div *ngIf="products.length > 0">
+  <p class="text-muted small mb-3">
+    <i class="bi bi-check-circle text-success me-1"></i>
+    {{ products.length }} resultado(s) para "<strong>{{ query }}</strong>"
+  </p>
+
+  <div class="row g-4">
+    <div
+      class="col-xl-3 col-lg-4 col-md-6 col-sm-6 col-12"
+      *ngFor="let product of products"
+    >
+      <div class="card h-100 border-0 shadow-sm product-card rounded-4">
+
+        <!-- IMAGEM / PLACEHOLDER -->
+        <a [routerLink]="['/produto', product.id]" class="text-decoration-none">
+          <div class="product-img-wrapper bg-dark rounded-top-4 d-flex align-items-center justify-content-center">
+            <ng-container *ngIf="product.imageUrl; else imgPlaceholder">
+              <img [src]="product.imageUrl" class="img-fluid product-img" [alt]="product.name" />
+            </ng-container>
+            <ng-template #imgPlaceholder>
+              <div class="text-center text-secondary">
+                <i class="bi bi-image" style="font-size: 4rem; opacity: 0.3;"></i>
+              </div>
+            </ng-template>
+          </div>
+        </a>
+
+        <span class="badge bg-monster position-absolute top-0 end-0 m-2 rounded-pill" *ngIf="product.category">
+          {{ product.category }}
+        </span>
+
+        <div class="card-body d-flex flex-column p-3">
+          <a [routerLink]="['/produto', product.id]" class="text-decoration-none text-dark">
+            <h6 class="card-title fw-bold mb-1 product-name">{{ product.name }}</h6>
+          </a>
+          <p class="card-text text-muted small flex-grow-1 product-description">{{ product.description }}</p>
+
+          <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top">
+            <span class="h5 mb-0 fw-bold text-success">R$ {{ product.price | number:'1.2-2' }}</span>
+
+            <button
+              *ngIf="authService.isLoggedIn"
+              class="btn btn-monster btn-sm"
+              (click)="addToCart(product.id)"
+            >
+              <i class="bi bi-cart-plus"></i> Adicionar
+            </button>
+            <a *ngIf="!authService.isLoggedIn" routerLink="/login" class="btn btn-outline-dark btn-sm">
+              <i class="bi bi-lock"></i> Login
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SEM RESULTADOS -->
+<div class="text-center py-5" *ngIf="products.length === 0 && query">
+  <i class="bi bi-emoji-frown text-secondary" style="font-size: 3rem;"></i>
+  <p class="h5 text-muted mt-3">Nenhum produto encontrado para "<strong>{{ query }}</strong>"</p>
+  <a routerLink="/" class="btn btn-outline-dark mt-2">
+    <i class="bi bi-grid me-1"></i> Ver todos os produtos
+  </a>
+</div>
+
+<!-- ESTADO INICIAL -->
+<div class="text-center py-5" *ngIf="products.length === 0 && !query">
+  <i class="bi bi-search text-secondary" style="font-size: 3rem; opacity: 0.3;"></i>
+  <p class="text-muted mt-3">Digite um termo acima para buscar produtos</p>
+</div>
+</div>

@@ -1,0 +1,189 @@
+/* ===== HERO ===== */
+.promo-hero {
+  padding: 5rem 0 3.5rem;
+  background: #000;
+  text-align: center;
+}
+.promo-hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 10vw, 7rem);
+  color: #fff;
+  text-shadow: 0 0 40px rgba(132, 189, 0, 0.35);
+  margin: 0.25rem 0 1rem;
+  line-height: 1;
+}
+.promo-hero-desc {
+  color: #888;
+  font-size: 1rem;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+/* ===== GRID SECTION ===== */
+.promo-grid-section {
+  padding: 3rem 0 5rem;
+  background: #000;
+}
+
+.promo-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+}
+@media (max-width: 991.98px) {
+  .promo-cards-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 575.98px) {
+  .promo-cards-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== CARD ===== */
+.promo-card {
+  background: #0f0f0f;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(132,189,0,0.2);
+  box-shadow: 0 0 0 1px rgba(132,189,0,0.08), 0 0 18px rgba(132,189,0,0.07);
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+.promo-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(132,189,0,0.55);
+  box-shadow: 0 0 0 1px rgba(132,189,0,0.28), 0 0 30px rgba(132,189,0,0.22), 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.promo-card__img-wrap {
+  display: block;
+  position: relative;
+  height: 300px;
+  background: #0a0a0a;
+  overflow: hidden;
+}
+.promo-card__img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 12px;
+  transition: transform 0.3s;
+}
+.promo-card:hover .promo-card__img-wrap img {
+  transform: scale(1.04);
+}
+.promo-card__no-img {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  font-size: 3rem;
+}
+
+.promo-discount-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #e03c31;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.promo-tag {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: #84bd00;
+  color: #000;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.promo-card__body {
+  padding: 1.25rem;
+}
+
+.promo-card__name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 0.04em;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+
+.promo-card__desc {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.promo-card__pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.promo-price-original {
+  color: #555;
+  font-size: 0.85rem;
+  text-decoration: line-through;
+}
+.promo-price-discounted {
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.promo-card__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.75rem;
+  background: #84bd00;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+  gap: 0.4rem;
+}
+.promo-card__btn:hover:not(:disabled) { background: #a0e000; color: #000; }
+.promo-card__btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ===== EMPTY ===== */
+.promo-empty {
+  text-align: center;
+  padding: 5rem 0;
+  color: #fff;
+}
+.btn-promo-cta {
+  display: inline-block;
+  margin-top: 1.25rem;
+  padding: 0.75rem 2rem;
+  background: #84bd00;
+  color: #000;
+  border-radius: 6px;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+.btn-promo-cta:hover { background: #a0e000; color: #000; }

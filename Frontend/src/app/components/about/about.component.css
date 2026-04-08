@@ -1,0 +1,114 @@
+/* ===== HERO ===== */
+.about-hero {
+  padding: 6rem 0 4rem;
+  background: #000;
+  text-align: center;
+}
+.about-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 9vw, 6rem);
+  color: #fff;
+  text-shadow: 0 0 40px rgba(132, 189, 0, 0.3);
+  margin: 0.5rem 0 2rem;
+  line-height: 1;
+}
+.about-text-block {
+  max-width: 680px;
+  margin: 0 auto;
+  color: #888;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  text-align: left;
+}
+.about-text-block p { margin-bottom: 1rem; }
+.about-text-block p:last-child { margin-bottom: 0; }
+
+/* ===== STATS ===== */
+.stats-section {
+  padding: 3.5rem 0;
+  background: #080808;
+  border-top: 1px solid #111;
+  border-bottom: 1px solid #111;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  background: #0f0f0f;
+  border: 1px solid #1a1a1a;
+  border-radius: 10px;
+}
+.stat-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  color: #84bd00;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.stat-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #555;
+  text-transform: uppercase;
+}
+
+/* ===== PILARES ===== */
+.pillars-section {
+  padding: 5rem 0;
+  background: #000;
+}
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+.pillar-card {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  border-radius: 10px;
+  padding: 2rem 1.5rem;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.pillar-card:hover {
+  border-color: #84bd00;
+  box-shadow: 0 8px 30px rgba(132, 189, 0, 0.1);
+}
+.pillar-icon {
+  font-size: 1.6rem;
+  color: #84bd00;
+  display: block;
+  margin-bottom: 1rem;
+}
+.pillar-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+  color: #fff;
+  margin-bottom: 0.6rem;
+}
+.pillar-desc {
+  font-size: 0.82rem;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 991.98px) {
+  .pillars-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-grid   { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 575.98px) {
+  .pillars-grid { grid-template-columns: 1fr; }
+  .stats-grid   { grid-template-columns: repeat(2, 1fr); }
+  .about-text-block { text-align: center; }
+}
